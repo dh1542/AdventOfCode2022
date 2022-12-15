@@ -6,16 +6,16 @@ object CampCleanUp extends App{
   val fileName = "/opt/AdventOfCode2022/Day4/src/main/scala/realInput.txt"
   val file = Source.fromFile(fileName)
 
-  var counter: Int = 0
+  private var counter: Int = 0
   for(line <- file.getLines()) {
     val array: Array[Int] = parseInput(line)
-    if(checkForContainingSectors(array)) counter += 1
+    val isOverlapping: Boolean = checkForOverlappingSectors(array)
+    if(isOverlapping) counter += 1
+    println(isOverlapping)
+
   }
   println(counter)
   file.close()
-
-
-
 
   /**
    * Returns parsed values in form [firstElfFrom, firstElfTo, secondElfFrom, secondElfTo]
@@ -23,10 +23,10 @@ object CampCleanUp extends App{
    * @return
    */
   private def parseInput(input: String): Array[Int] = {
-    var parsedValuesAsString = Array[Int]()
+    var parsedValuesAsIntegers = Array[Int]()
     val trimmedList: List[String] = input.split("-").map(_.trim).toList
-    trimmedList.foreach(element => element.split(",").foreach(number => {parsedValuesAsString =   parsedValuesAsString :+ number.toInt}))
-    parsedValuesAsString
+    trimmedList.foreach(element => element.split(",").foreach(number => {parsedValuesAsIntegers =   parsedValuesAsIntegers :+ number.toInt}))
+    parsedValuesAsIntegers
   }
 
   private def checkForContainingSectors(sectorArray: Array[Int]): Boolean = {
@@ -36,6 +36,15 @@ object CampCleanUp extends App{
     else if(sectorArray(0) >= sectorArray(2) && sectorArray(1) <= sectorArray(3)) true
     else false
   }
+
+  private def checkForOverlappingSectors(sectorArray: Array[Int]): Boolean = {
+    println(sectorArray.mkString("Array(", ", ", ")"))
+    if(sectorArray(0) >= sectorArray(2) && sectorArray(0) <= sectorArray(3)) true
+    else if(sectorArray(1) >= sectorArray(2) && sectorArray(1) <= sectorArray(3)) true
+    else if(checkForContainingSectors(sectorArray)) true
+    else false
+  }
+
 
 
 
